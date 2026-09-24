@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumiber Studios | Building Digital Experiences Beyond Imagination</title>
+  <meta name="description" content="Lumiber Studios — creative digital studio specializing in website design, multimedia, AI experiences, and digital innovation.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loader" class="loader">
+    <div class="loader-content">
+      <div class="logo-loader">
+        <div class="logo-glow"></div>
+        <h1 class="logo-text">LUMIBER</h1>
+        <span class="logo-sub">STUDIOS</span>
+      </div>
+      <div class="scan-line"></div>
+      <div class="loader-status">
+        <p id="loader-text">Initializing Lumiber Studios...</p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span id="loader-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Changelog Popup -->
+  <div id="changelog-modal" class="modal hidden">
+    <div class="modal-panel glass">
+      <div class="modal-header">
+        <h2>What's New in Lumiber Studios</h2>
+        <button class="close-btn" id="close-changelog" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="version-badge">Version 2.0</div>
+        <ul class="changelog-list">
+          <li><span class="check">✓</span> Added AI Assistant Lumi</li>
+          <li><span class="check">✓</span> Improved cinematic animations</li>
+          <li><span class="check">✓</span> Added Ambient Music Mode</li>
+          <li><span class="check">✓</span> Updated portfolio system</li>
+          <li><span class="check">✓</span> Enhanced glassmorphism UI</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="view-updates">View Updates</button>
+        <button class="btn btn-ghost" id="close-changelog-2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Particles Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Custom Cursor Glow -->
+  <div id="cursor-glow"></div>
+
+  <!-- Music Control -->
+  <div id="music-control" class="music-control glass">
+    <button id="music-toggle" class="music-btn" title="Enable Ambient Mode">
+      <span class="music-icon">🎵</span>
+      <span class="music-label">Enable Ambient Mode</span>
+    </button>
+    <div id="music-panel" class="music-panel hidden">
+      <div class="music-controls">
+        <button id="play-pause" class="icon-btn" title="Play/Pause">▶</button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.35">
+        <button id="mute-btn" class="icon-btn" title="Mute">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lumi AI Assistant -->
+  <div id="lumi" class="lumi">
+    <div class="lumi-orb" id="lumi-orb">
+      <div class="orb-core"></div>
+      <div class="orb-ring"></div>
+      <div class="orb-ring ring-2"></div>
+    </div>
+    <div id="lumi-panel" class="lumi-panel glass hidden">
+      <div class="lumi-header">
+        <span class="lumi-name">Lumi</span>
+        <button id="lumi-close" class="close-btn small">&times;</button>
+      </div>
+      <div class="lumi-messages" id="lumi-messages">
+        <div class="lumi-msg">Hello, welcome to Lumiber Studios. Would you like a quick tour?</div>
+      </div>
+      <div class="lumi-actions">
+        <button class="btn btn-sm btn-primary" id="start-tour">Start Tour</button>
+        <button class="btn btn-sm btn-ghost" id="explore-self">Explore Myself</button>
+      </div>
+      <button id="disable-lumi" class="disable-link">Disable Lumi</button>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header id="header" class="header">
+    <nav class="nav glass">
+      <a href="#hero" class="nav-logo">
+        <span class="nav-logo-text">LUMIBER</span>
+        <span class="nav-logo-sub">STUDIOS</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="nav-cta btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get in Touch</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <div class="hero-logo">
+          <div class="hero-logo-glow"></div>
+          <h1 class="hero-logo-text">LUMIBER</h1>
+        </div>
+        <h2 class="hero-title">Building Digital Experiences<br><span class="gradient-text">Beyond Imagination</span></h2>
+        <p class="hero-subtitle">Lumiber Studios creates innovative websites, multimedia experiences, and futuristic digital solutions.</p>
+        <div class="hero-buttons">
+          <a href="#portfolio" class="btn btn-primary">Explore Projects</a>
+          <a href="#contact" class="btn btn-outline">Contact Studio</a>
+        </div>
+      </div>
+      <div class="hero-lights">
+        <div class="light-beam"></div>
+        <div class="light-beam beam-2"></div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section about">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Who We Are</span>
+          <h2 class="section-title">About Lumiber Studios</h2>
+          <p class="section-desc">Lumiber Studios is a creative technology studio focused on designing beautiful digital experiences through web development, multimedia, AI, and innovative ideas.</p>
+        </div>
+        <div class="about-grid">
+          <div class="about-card glass" data-animate>
+            <div class="about-icon">◈</div>
+            <h3>Mission</h3>
+            <p>To craft immersive digital worlds that inspire, connect, and push the boundaries of what's possible online.</p>
+          </div>
+          <div class="about-card glass" data-animate>
+            <div class="about-icon">◇</div>
+            <h3>Vision</h3>
+            <p>A future where every digital interaction feels cinematic, intelligent, and beautifully human.</p>
+          </div>
+          <div class="about-card glass" data-animate>
+            <div class="about-icon">⬡</div>
+            <h3>Values</h3>
+            <p>Curiosity, precision, creativity, and a relentless pursuit of elegant solutions.</p>
+          </div>
+        </div>
+        <div class="values-row">
+          <div class="value-pill glass">Innovation</div>
+          <div class="value-pill glass">Creativity</div>
+          <div class="value-pill glass">Technology</div>
+          <div class="value-pill glass">Experience</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="section services">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">What We Do</span>
+          <h2 class="section-title">Our Services</h2>
+        </div>
+        <div class="services-grid">
+          <div class="service-card glass" data-animate>
+            <div class="service-icon">🖥️</div>
+            <h3>Web Development</h3>
+            <p>Modern responsive websites with beautiful UI/UX and pixel-perfect craftsmanship.</p>
+            <div class="service-glow"></div>
+          </div>
+          <div class="service-card glass" data-animate>
+            <div class="service-icon">🎨</div>
+            <h3>Multimedia Design</h3>
+            <p>Graphics, animations, branding, and digital content that captivate audiences.</p>
+            <div class="service-glow"></div>
+          </div>
+          <div class="service-card glass" data-animate>
+            <div class="service-icon">🤖</div>
+            <h3>AI Solutions</h3>
+            <p>Smart assistants and interactive experiences powered by intelligent systems.</p>
+            <div class="service-glow"></div>
+          </div>
+          <div class="service-card glass" data-animate>
+            <div class="service-icon">✨</div>
+            <h3>Creative Technology</h3>
+            <p>Unique digital concepts and experiments that redefine interaction.</p>
+            <div class="service-glow"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="section portfolio">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Our Work</span>
+          <h2 class="section-title">Selected Projects</h2>
+        </div>
+        <div class="portfolio-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="web">Websites</button>
+          <button class="filter-btn" data-filter="ai">AI</button>
+          <button class="filter-btn" data-filter="multi">Multimedia</button>
+        </div>
+        <div class="portfolio-grid">
+          <article class="project-card glass" data-category="ai" data-animate>
+            <div class="project-visual" style="--accent: #F59E0B">
+              <div class="project-placeholder">AI</div>
+            </div>
+            <div class="project-info">
+              <h3>Lumiber AI</h3>
+              <p>Intelligent conversational interface with adaptive personality and real-time responses.</p>
+              <div class="tech-tags">
+                <span>JavaScript</span><span>Web Audio</span><span>Canvas</span>
+              </div>
+            </div>
+          </article>
+          <article class="project-card glass" data-category="multi" data-animate>
+            <div class="project-visual" style="--accent: #FBBF24">
+              <div class="project-placeholder">YB</div>
+            </div>
+            <div class="project-info">
+              <h3>Digital Yearbook</h3>
+              <p>Interactive multimedia yearbook with cinematic page transitions and memory timelines.</p>
+              <div class="tech-tags">
+                <span>GSAP</span><span>CSS3</span><span>HTML5</span>
+              </div>
+            </div>
+          </article>
+          <article class="project-card glass" data-category="web" data-animate>
+            <div class="project-visual" style="--accent: #D97706">
+              <div class="project-placeholder">CW</div>
+            </div>
+            <div class="project-info">
+              <h3>Creative Websites</h3>
+              <p>Collection of award-inspired landing pages with advanced scroll storytelling.</p>
+              <div class="tech-tags">
+                <span>Three.js</span><span>WebGL</span><span>Responsive</span>
+              </div>
+            </div>
+          </article>
+          <article class="project-card glass" data-category="ai multi" data-animate>
+            <div class="project-visual" style="--accent: #FDE68A">
+              <div class="project-placeholder">IE</div>
+            </div>
+            <div class="project-info">
+              <h3>Interactive Experiences</h3>
+              <p>Immersive installations combining generative art, sound, and user input.</p>
+              <div class="tech-tags">
+                <span>Canvas</span><span>Web Audio</span><span>Particles</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Connect</span>
+          <h2 class="section-title">Send a Transmission</h2>
+          <p class="section-desc">Ready to build something extraordinary? Reach out and let's create the future together.</p>
+        </div>
+        <div class="contact-wrapper">
+          <form id="contact-form" class="contact-form glass" data-animate>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required placeholder="Your name" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" required placeholder="Tell us about your vision..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary full-width">Send Transmission</button>
+          </form>
+          <div class="contact-info">
+            <div class="social-links">
+              <a href="#" class="social-link glass" title="Facebook" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href="#" class="social-link glass" title="YouTube" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33zM9.75 15.02V8.98l5.75 3.04-5.75 3z"/></svg>
+              </a>
+              <a href="#" class="social-link glass" title="Instagram" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.17.15 4.67 1.66 4.82 4.82.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.16-1.65 4.67-4.82 4.82-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.17-.15-4.67-1.66-4.82-4.82-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.48 3.89 3.98 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.36-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95C23.73 2.69 21.31.27 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.84-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+              </a>
+              <a href="#" class="social-link glass" title="GitHub" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+            </div>
+            <p class="contact-note">We typically respond within 24–48 hours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-line"></div>
+    <div class="container footer-content">
+      <p class="footer-brand">Lumiber Studios © 2026</p>
+      <p class="footer-tagline">Creating tomorrow's digital experiences.</p>
+    </div>
+  </footer>
+
+  <!-- Toast for form -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
