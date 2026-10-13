@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#08080a" />
+<title>LumiberStudios — Code • Design • Motion</title>
+
+<style>
+/* ============================================================
+   1. THEME — BLACK & YELLOW
+   ============================================================ */
+:root {
+  --black:      #08080a;
+  --black-2:    #0d0d10;
+  --black-3:    #14141a;
+  --charcoal:   #1c1c24;
+  --slate:      #2a2a34;
+  --line:       #2e2e38;
+
+  --yellow:     #ffd60a;
+  --yellow-2:   #ffe066;
+  --yellow-3:   #ffea8f;
+  --amber:      #f5b400;
+  --gold:       #d4a017;
+
+  --cream:      #fffce8;
+  --muted:      rgba(255, 252, 232, 0.55);
+  --faint:      rgba(255, 252, 232, 0.28);
+
+  --font:  "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono:  "JetBrains Mono", "SF Mono", "Consolas", "Courier New", monospace;
+
+  /* Speed knob */
+  --speed: 1;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--black);
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+html.intro-lock,
+html.intro-lock body { overflow: hidden; }
+
+/* ============================================================
+   2. INTRO OVERLAY
+   ============================================================ */
+.intro {
+  position: fixed; inset: 0; z-index: 9999;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 30%, #14141a 0%, var(--black-2) 45%, var(--black) 100%);
+  display: grid;
+  place-items: center;
+  transition:
+    opacity .7s ease,
+    transform .8s cubic-bezier(.4, 0, .2, 1),
+    filter .7s ease;
+  will-change: opacity, transform, filter;
+}
+.intro.intro--exit {
+  opacity: 0;
+  transform: scale(1.05);
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+.intro__grid {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 214, 10, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 214, 10, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px, 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, #000 25%, transparent 100%);
+          mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, #000 25%, transparent 100%);
+  opacity: 0;
+  animation: grid-in 1.4s ease-out .1s both;
+}
+@keyframes grid-in { to { opacity: 1; } }
+
+.intro__glow {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: min(880px, 110vw);
+  height: min(880px, 110vw);
+  transform: translate(-50%, -50%) scale(0.5);
+  background: radial-gradient(circle,
+    rgba(255, 214, 10, 0.28) 0%,
+    rgba(245, 180, 0, 0.14) 32%,
+    rgba(212, 160, 23, 0.06) 55%,
+    transparent 72%);
+  filter: blur(70px);
+  opacity: 0;
+  pointer-events: none;
+  animation: glow-in 3.4s ease-out .3s both;
+}
+@keyframes glow-in {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
+}
+
+.intro__vignette {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 130% 90% at 50% 50%,
+    transparent 45%,
+    rgba(0, 0, 0, 0.6) 100%);
+}
+
+.intro__bracket {
+  position: absolute;
+  width: 46px; height: 46px;
+  border: 2px solid var(--yellow);
+  opacity: 0;
+  pointer-events: none;
+  animation: bracket-in .7s ease-out both;
+}
+.intro__bracket--tl { top: 26px; left: 26px;  border-right: 0; border-bottom: 0; animation-delay: .6s; }
+.intro__bracket--tr { top: 26px; right: 26px; border-left: 0;  border-bottom: 0; animation-delay: .75s; }
+.intro__bracket--bl { bottom: 26px; left: 26px; border-right: 0; border-top: 0; animation-delay: .9s; }
+.intro__bracket--br { bottom: 26px; right: 26px; border-left: 0; border-top: 0; animation-delay: 1.05s; }
+@keyframes bracket-in {
+  0%   { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 0.55; transform: scale(1); }
+}
+
+/* ============================================================
+   3. THE CODE EDITOR WINDOW
+   ============================================================ */
+.intro__stack {
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 640px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.editor {
+  width: 100%;
+  background: linear-gradient(180deg, var(--black-3) 0%, var(--black-2) 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 214, 10, 0.06),
+    0 0 60px rgba(255, 214, 10, 0.10);
+  opacity: 0;
+  transform: translateY(-20px) scale(0.96);
+  animation: editor-in 1s cubic-bezier(.22, 1, .36, 1) .2s both;
+  will-change: transform, opacity;
+}
+@keyframes editor-in {
+  0%   { opacity: 0; transform: translateY(-20px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.editor__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid var(--line);
+}
+.editor__dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--slate);
+}
+.editor__dot--r { background: #ff5f57; }
+.editor__dot--y { background: #febc2e; }
+.editor__dot--g { background: #28c840; }
+
+.editor__title {
+  margin-left: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.editor__body {
+  position: relative;
+  padding: 20px 22px 34px;
+  font-family: var(--mono);
+  font-size: clamp(12px, 1.9vw, 14px);
+  line-height: 1.75;
+  color: var(--cream);
+  min-height: 220px;
+}
+
+.editor__line {
+  display: flex;
+  gap: 14px;
+  white-space: pre;
+}
+
+.editor__num {
+  user-select: none;
+  color: var(--faint);
+  min-width: 18px;
+  text-align: right;
+  font-size: 0.85em;
+}
+
+.editor__code {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tk-key   { color: #ff9cc7; }
+.tk-fn    { color: var(--yellow); }
+.tk-str   { color: #a6e3a1; }
+.tk-num   { color: #ffb86b; }
+.tk-com   { color: rgba(255,252,232,0.32); font-style: italic; }
+.tk-id    { color: #89ddff; }
+.tk-punc  { color: rgba(255,252,232,0.6); }
+.tk-var   { color: var(--cream); }
+
+.editor__cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.1em;
+  vertical-align: text-bottom;
+  background: var(--yellow);
+  box-shadow: 0 0 8px var(--yellow);
+  margin-left: 1px;
+  animation: blink 0.9s steps(2) infinite;
+}
+@keyframes blink {
+  0%, 50%   { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+.editor__status {
+  position: absolute;
+  left: 22px; right: 22px; bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.editor__status.is-on { opacity: 1; }
+
+.editor__progress {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.editor__progress::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--yellow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.4s cubic-bezier(.22, 1, .36, 1);
+}
+.editor__status.is-on .editor__progress::after { transform: scaleX(1); }
+
+/* ============================================================
+   4. LOGO REVEAL
+   ------------------------------------------------------------
+   The mark is now a perfect circle containing an <img>.
+   Replace assets/logo.png with your own round PNG/SVG/JPG.
+   ============================================================ */
+.logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: logo-in 1.1s cubic-bezier(.22, 1.3, .36, 1) both;
+  animation-delay: 4.1s;
+}
+@keyframes logo-in {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.94); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Round logo mark */
+.logo__mark {
+  position: relative;
+  width: clamp(64px, 12vw, 84px);
+  height: clamp(64px, 12vw, 84px);
+  border-radius: 50%;                       /* ← perfect circle */
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, var(--yellow) 0%, var(--amber) 100%);
+  box-shadow:
+    0 8px 28px rgba(255, 214, 10, 0.35),
+    0 0 60px rgba(255, 214, 10, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+/* Pulsing ring behind the mark — also round */
+.logo__mark::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;                       /* ← match the circle */
+  border: 2px solid rgba(255, 214, 10, 0.5);
+  opacity: 0;
+  animation: mark-ring 2.6s ease-out infinite;
+  animation-delay: 4.6s;
+  pointer-events: none;
+}
+@keyframes mark-ring {
+  0%   { opacity: 0.7; transform: scale(1);   }
+  100% { opacity: 0;   transform: scale(1.5); }
+}
+
+/* The <img> logo — centred inside the circle */
+.logo__mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                        /* use `contain` if your image
+                                               should NOT fill the circle */
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+
+.logo__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.logo__name {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 4.2vw, 2rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--cream);
+}
+.logo__name .logo__accent {
+  color: var(--yellow);
+}
+.logo__tag {
+  font-family: var(--mono);
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.logo__dots {
+  display: inline-flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+.logo__dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--yellow);
+  opacity: 0.35;
+  animation: dot-pulse 1.4s ease-in-out infinite;
+}
+.logo__dots span:nth-child(2) { animation-delay: .18s; }
+.logo__dots span:nth-child(3) { animation-delay: .36s; }
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.9); }
+  50%      { opacity: 1;    transform: scale(1.1); }
+}
+
+/* ============================================================
+   5. ENTER BUTTON (an <a> that navigates)
+   ============================================================ */
+.intro__cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 34px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: clamp(.78rem, 2.1vw, .88rem);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--black);
+  text-decoration: none;
+  background: linear-gradient(180deg, var(--yellow-2) 0%, var(--yellow) 100%);
+  box-shadow:
+    0 4px 0 rgba(212, 160, 23, 0.85),
+    0 16px 34px rgba(255, 214, 10, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  transform: translateY(14px) scale(0.9);
+  pointer-events: auto;
+  transition:
+    transform .35s cubic-bezier(.22, 1.3, .4, 1),
+    box-shadow .35s ease,
+    filter .35s ease;
+  animation: cta-in .9s cubic-bezier(.22, 1.4, .4, 1) both;
+  animation-delay: 5s;
+}
+@keyframes cta-in {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.9); }
+  60%  { opacity: 1; transform: translateY(-2px) scale(1.04); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.intro__cta::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 214, 10, 0.6);
+  opacity: 0;
+  animation: cta-pulse 2.6s ease-out infinite;
+  animation-delay: 6.4s;
+  pointer-events: none;
+}
+@keyframes cta-pulse {
+  0%   { opacity: 0.7; transform: scale(1);    }
+  100% { opacity: 0;   transform: scale(1.4);  }
+}
+
+.intro__cta:hover,
+.intro__cta:focus-visible {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow:
+    0 6px 0 rgba(212, 160, 23, 0.85),
+    0 22px 42px rgba(255, 214, 10, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  filter: brightness(1.05);
+  outline: none;
+}
+.intro__cta:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 2px 0 rgba(212, 160, 23, 0.85),
+    0 10px 20px rgba(255, 214, 10, 0.3);
+}
+.intro__cta-arrow {
+  display: inline-block;
+  transition: transform .3s ease;
+}
+.intro__cta:hover .intro__cta-arrow,
+.intro__cta:focus-visible .intro__cta-arrow {
+  transform: translateX(4px);
+}
+
+/* ============================================================
+   6. REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .intro__grid,
+  .intro__glow,
+  .intro__bracket,
+  .editor,
+  .logo,
+  .logo__mark::before,
+  .logo__dots span,
+  .intro__cta,
+  .intro__cta::after {
+    animation: none !important;
+  }
+  .intro__grid,
+  .intro__glow { opacity: 1; }
+  .intro__bracket { opacity: 0.55; }
+  .editor,
+  .logo { opacity: 1; transform: none; }
+  .intro__cta { opacity: 1; transform: none; }
+  .editor__status { opacity: 1; }
+  .editor__status .editor__progress::after { transform: scaleX(1); }
+  .editor__cursor { display: none; }
+}
+
+/* ============================================================
+   7. YOUR SITE (placeholder — replace with your real page)
+   ============================================================ */
+.site {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 8vh 6vw;
+  background:
+    radial-gradient(120% 80% at 50% 0%, #14141a 0%, var(--black) 65%);
+  color: var(--cream);
+  text-align: center;
+}
+.site__eyebrow {
+  margin: 0 0 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+.site__title {
+  margin: 0 0 1rem;
+  font-family: var(--font);
+  font-size: clamp(2.4rem, 8vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.site__title .accent { color: var(--yellow); }
+.site__lead {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 520px;
+}
+body.intro-playing .site {
+  opacity: 0;
+  transform: translateY(16px);
+  filter: blur(6px);
+}
+body.site--in .site {
+  opacity: 1; transform: none; filter: blur(0);
+  transition:
+    opacity .9s ease .05s,
+    transform .9s cubic-bezier(.22, 1, .36, 1) .05s,
+    filter .9s ease .05s;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     INTRO OVERLAY
+     ============================================================ -->
+<div class="intro" id="intro" aria-hidden="true">
+
+  <div class="intro__grid"></div>
+  <div class="intro__glow"></div>
+
+  <span class="intro__bracket intro__bracket--tl"></span>
+  <span class="intro__bracket intro__bracket--tr"></span>
+  <span class="intro__bracket intro__bracket--bl"></span>
+  <span class="intro__bracket intro__bracket--br"></span>
+
+  <div class="intro__stack">
+
+    <!-- ---------- CODE EDITOR ---------- -->
+    <div class="editor" id="editor">
+      <div class="editor__bar">
+        <span class="editor__dot editor__dot--r"></span>
+        <span class="editor__dot editor__dot--y"></span>
+        <span class="editor__dot editor__dot--g"></span>
+        <span class="editor__title">lumiber.init.js</span>
+      </div>
+      <div class="editor__body" id="editorBody"></div>
+    </div>
+
+    <!-- ---------- LOGO REVEAL ----------
+         The mark is a <div> circle containing an <img>.
+         Replace assets/logo.png with your own image (PNG, SVG, JPG, WebP).
+         Square images work best since the circle will crop them.
+    -->
+    <div class="logo" id="logo">
+      <div class="logo__mark">
+        <img src="assets/logo.png" alt="LumiberStudios logo" />
+      </div>
+      <div class="logo__text">
+        <div class="logo__name">Lumiber<span class="logo__accent">Studios</span></div>
+        <div class="logo__tag">Code • Design • Motion</div>
+        <div class="logo__dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <!-- ---------- ENTER BUTTON (link) ---------- -->
+    <a class="intro__cta" id="ctaButton" href="LumiberStudio.html" aria-label="Enter LumiberStudios">
+      <span>Enter</span>
+      <span class="intro__cta-arrow" aria-hidden="true">→</span>
+    </a>
+
+  </div>
+
+  <div class="intro__vignette"></div>
+</div>
+
+<noscript><style>.intro{display:none!important}</style></noscript>
+
+<!-- ============================================================
+     YOUR EXISTING SITE (placeholder)
+     ============================================================ -->
+<main class="site">
+  <section>
+    <p class="site__eyebrow">Code • Design • Motion</p>
+    <h1 class="site__title">Lumiber<span class="accent">Studios</span></h1>
+    <p class="site__lead">We build playful, considered digital experiences — from the first line of code to the last pixel.</p>
+  </section>
+</main>
+
+<script>
+/* ============================================================
+   INTRO SCRIPT — LumiberStudios
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var intro      = document.getElementById('intro');
+  var editorBody = document.getElementById('editorBody');
+  var editor     = document.getElementById('editor');
+  var cta        = document.getElementById('ctaButton');
+  if (!intro || !editorBody) return;
+
+  var body = document.body;
+  var html = document.documentElement;
+
+  function readSpeed() {
+    var v = parseFloat(getComputedStyle(intro).getPropertyValue('--speed'));
+    return isNaN(v) ? 1 : v;
+  }
+  var SPEED = readSpeed();
+
+  var reduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- The code we type out ---- */
+  var CODE_LINES = [
+    [['// boot up the studio', 'tk-com']],
+    [['const ', 'tk-key'], ['studio', 'tk-var'], [' = ', 'tk-punc'], ['new ', 'tk-key'], ['Lumiber', 'tk-fn'], ['(', 'tk-punc'], ['{', 'tk-punc']],
+    [['  name: ', 'tk-var'], ['"LumiberStudios"', 'tk-str'], [',', 'tk-punc']],
+    [['  theme: ', 'tk-var'], ['[', 'tk-punc'], ['"#000000"', 'tk-str'], [', ', 'tk-punc'], ['"#FFD60A"', 'tk-str'], [']', 'tk-punc']],
+    [['  skills: ', 'tk-var'], ['[', 'tk-punc'], ['"code"', 'tk-str'], [', ', 'tk-punc'], ['"design"', 'tk-str'], [', ', 'tk-punc'], ['"motion"', 'tk-str'], [']', 'tk-punc']],
+    [['}', 'tk-punc'], [');', 'tk-punc']],
+    [['studio.', 'tk-var'], ['start', 'tk-fn'], ['();', 'tk-punc']]
+  ];
+
+  /* ---- Typewriter ---- */
+  function buildLineEl(lineNumber) {
+    var line = document.createElement('div');
+    line.className = 'editor__line';
+    var num = document.createElement('span');
+    num.className = 'editor__num';
+    num.textContent = String(lineNumber);
+    var code = document.createElement('span');
+    code.className = 'editor__code';
+    line.appendChild(num);
+    line.appendChild(code);
+    return { el: line, code: code };
+  }
+
+  function typeAll(done) {
+    var lineIdx = 0, chunkIdx = 0, charIdx = 0;
+    var current = null;
+    var cursor = document.createElement('span');
+    cursor.className = 'editor__cursor';
+
+    function step() {
+      if (lineIdx >= CODE_LINES.length) {
+        if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+        done();
+        return;
+      }
+      var line = CODE_LINES[lineIdx];
+
+      if (!current) {
+        current = buildLineEl(lineIdx + 1);
+        editorBody.appendChild(current.el);
+        current.code.appendChild(cursor);
+      }
+
+      if (chunkIdx >= line.length) {
+        lineIdx++; chunkIdx = 0; charIdx = 0; current = null;
+        setTimeout(step, (lineIdx < CODE_LINES.length ? 110 : 60) * SPEED);
+        return;
+      }
+
+      var chunk = line[chunkIdx];
+      var text = chunk[0], cls = chunk[1];
+
+      if (charIdx === 0) {
+        var span = document.createElement('span');
+        span.className = cls;
+        span.textContent = '';
+        current.code.insertBefore(span, cursor);
+        current._activeSpan = span;
+      }
+
+      current._activeSpan.textContent += text.charAt(charIdx);
+      charIdx++;
+
+      if (charIdx >= text.length) { chunkIdx++; charIdx = 0; }
+
+      var ch = text.charAt(charIdx - 1);
+      var delay = 22;
+      if (ch === ' ' || ch === ',') delay = 30;
+      if (ch === '\n') delay = 60;
+      setTimeout(step, delay * SPEED);
+    }
+    step();
+  }
+
+  /* ---- Compile phase ---- */
+  function compileAndReveal() {
+    var status = document.createElement('div');
+    status.className = 'editor__status';
+    status.innerHTML = '<span>compiling</span><span class="editor__progress"></span>';
+    editor.appendChild(status);
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { status.classList.add('is-on'); });
+    });
+
+    setTimeout(function () {
+      setTimeout(autoExitTimer, 3200 * SPEED);
+    }, 1500 * SPEED);
+  }
+
+  /* ---- Exit + navigate ---- */
+  var finished = false;
+  var autoExitTimer = null;
+
+  function playExitAnimation() {
+    if (finished) return;
+    finished = true;
+    if (autoExitTimer) clearTimeout(autoExitTimer);
+
+    body.classList.add('site--in');
+    intro.classList.add('intro--exit');
+    html.classList.remove('intro-lock');
+
+    setTimeout(function () {
+      if (intro.parentNode) intro.parentNode.removeChild(intro);
+    }, 900);
+  }
+
+  if (cta) {
+    cta.addEventListener('click', function (e) {
+      var target = cta.getAttribute('href') || 'index.html';
+      e.preventDefault();
+      cta.blur();
+      playExitAnimation();
+      setTimeout(function () {
+        window.location.href = target;
+      }, 700);
+    });
+  }
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Esc') playExitAnimation();
+  });
+
+  /* ---- Boot ---- */
+  html.classList.add('intro-lock');
+  body.classList.add('intro-playing');
+
+  if (reduced) {
+    CODE_LINES.forEach(function (line, i) {
+      var built = buildLineEl(i + 1);
+      line.forEach(function (chunk) {
+        var span = document.createElement('span');
+        span.className = chunk[1];
+        span.textContent = chunk[0];
+        built.code.appendChild(span);
+      });
+      editorBody.appendChild(built.el);
+    });
+    setTimeout(function () {
+      window.location.href = cta ? (cta.getAttribute('href') || 'index.html') : 'index.html';
+    }, 2400);
+  } else {
+    setTimeout(function () {
+      typeAll(compileAndReveal);
+    }, 400 * SPEED);
+  }
+
+})();
+</script>
+</body>
+</html>
