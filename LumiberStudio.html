@@ -35,12 +35,6 @@
       padding: 1rem 5%;
       z-index: 1000;
       border-bottom: 1px solid rgba(250, 204, 21, 0.15);
-      animation: slideDown 0.6s ease-out;
-    }
-
-    @keyframes slideDown {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
     }
 
     .logo {
@@ -51,7 +45,6 @@
       font-weight: 600;
       color: #fff;
       letter-spacing: -0.02em;
-      position: relative;
     }
 
     .logo-wrapper {
@@ -176,68 +169,10 @@
       overflow: hidden;
     }
 
-    .hero::before,
-    .hero::after,
-    .orb3,
-    .orb4 {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .hero::before {
-      width: 280px;
-      height: 280px;
-      background: radial-gradient(circle, rgba(250, 204, 21, 0.25), transparent 70%);
-      top: 18%;
-      left: 8%;
-      animation: float 8s ease-in-out infinite;
-    }
-
-    .hero::after {
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(251, 191, 36, 0.18), transparent 70%);
-      bottom: 12%;
-      right: 10%;
-      animation: float 10s ease-in-out infinite reverse;
-    }
-
-    .orb3 {
-      width: 130px;
-      height: 130px;
-      background: radial-gradient(circle, rgba(250, 204, 21, 0.15), transparent 70%);
-      top: 55%;
-      left: 50%;
-      animation: float 12s ease-in-out infinite;
-    }
-
-    .orb4 {
-      width: 90px;
-      height: 90px;
-      background: radial-gradient(circle, rgba(254, 240, 138, 0.12), transparent 70%);
-      top: 30%;
-      right: 25%;
-      animation: float 14s ease-in-out infinite reverse;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      33% { transform: translateY(-15px) translateX(10px); }
-      66% { transform: translateY(8px) translateX(-6px); }
-    }
-
     .hero-content {
       z-index: 1;
       max-width: 700px;
       padding: 0 1.5rem;
-      animation: fadeUp 1s ease-out;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero h1 {
@@ -247,10 +182,6 @@
       color: #fff;
       min-height: 1.2em;
       letter-spacing: -0.02em;
-    }
-
-    .hero h1 .typed {
-      color: #fff;
     }
 
     .hero h1 .studio {
@@ -282,7 +213,6 @@
       font-size: 1.2rem;
       margin-bottom: 2rem;
       color: #b0b0b0;
-      animation: fadeUp 1s ease-out 0.4s both;
     }
 
     .btn {
@@ -296,33 +226,11 @@
       transition: transform 0.3s, box-shadow 0.3s;
       border: none;
       cursor: pointer;
-      position: relative;
-      animation: fadeUp 1s ease-out 0.6s both;
-      overflow: hidden;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .btn:hover::before {
-      left: 100%;
     }
 
     .btn:hover {
       transform: translateY(-4px) scale(1.03);
       box-shadow: 0 12px 28px rgba(250, 204, 21, 0.5);
-    }
-
-    .btn:active {
-      transform: translateY(-1px);
     }
 
     /* Sections */
@@ -331,7 +239,7 @@
     }
 
     h2 {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       text-align: center;
       margin-bottom: 1rem;
       color: #fff;
@@ -339,8 +247,6 @@
       display: inline-block;
       left: 50%;
       transform: translateX(-50%);
-      font-weight: 600;
-      letter-spacing: -0.02em;
     }
 
     h2::after {
@@ -351,12 +257,6 @@
       background: #facc15;
       margin: 0.6rem auto 0;
       border-radius: 2px;
-      animation: lineGrow 1.2s ease-out;
-    }
-
-    @keyframes lineGrow {
-      from { width: 0; opacity: 0; }
-      to { width: 60px; opacity: 1; }
     }
 
     .section-desc {
@@ -378,26 +278,19 @@
     }
 
     .project-card {
-      background: #121212;
-      border-radius: 14px;
+      background: #141414;
+      border-radius: 16px;
       overflow: hidden;
       transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      will-change: transform;
+      border: 1px solid rgba(250, 204, 21, 0.12);
       opacity: 0;
-      animation: cardIn 0.7s ease-out forwards;
+      transform: translateY(30px);
     }
 
-    .project-card:nth-child(1) { animation-delay: 0.1s; }
-    .project-card:nth-child(2) { animation-delay: 0.2s; }
-    .project-card:nth-child(3) { animation-delay: 0.3s; }
-    .project-card:nth-child(4) { animation-delay: 0.4s; }
-    .project-card:nth-child(5) { animation-delay: 0.5s; }
-    .project-card:nth-child(6) { animation-delay: 0.6s; }
-
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(30px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .project-card.active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
     .project-card:hover {
@@ -410,11 +303,6 @@
       height: 180px;
       background-size: cover;
       background-position: center;
-      transition: transform 0.6s ease;
-    }
-
-    .project-card:hover .project-img {
-      transform: scale(1.08);
     }
 
     .project-info {
@@ -441,7 +329,6 @@
       border-radius: 20px;
       font-size: 0.8rem;
       font-weight: 500;
-      transition: background 0.3s, transform 0.3s;
       margin-bottom: 1rem;
     }
 
@@ -455,17 +342,11 @@
       font-weight: 600;
       font-size: 0.9rem;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-      margin-top: 0.5rem;
     }
 
     .visit-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(250, 204, 21, 0.4);
-    }
-
-    .project-card:hover .tag {
-      background: rgba(250, 204, 21, 0.3);
-      transform: scale(1.05);
     }
 
     /* About */
@@ -479,13 +360,9 @@
       text-align: center;
       color: #ccc;
       font-size: 1.1rem;
-      animation: fadeUp 1s ease-out;
     }
 
-    .about-content p {
-      margin-bottom: 1rem;
-    }
-
+    /* Contact */
     .contact-text {
       text-align: center;
       color: #ccc;
@@ -509,7 +386,6 @@
       border-radius: 10px;
       background: rgba(250, 204, 21, 0.06);
       transition: all 0.3s ease;
-      letter-spacing: 0.01em;
     }
 
     .email-link:hover {
@@ -517,43 +393,9 @@
       color: #0a0a0a;
       transform: translateY(-3px);
       box-shadow: 0 10px 25px rgba(250, 204, 21, 0.35);
-      max-width: 500px;
-      margin: 2rem auto 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
     }
 
-    .contact-form input,
-    .contact-form textarea {
-      background: #141414;
-      border: 1px solid rgba(250, 204, 21, 0.2);
-      border-radius: 8px;
-      padding: 0.9rem;
-      color: #fff;
-      font-family: inherit;
-      font-size: 1rem;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
-    }
-
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      outline: none;
-      border-color: #facc15;
-      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
-      transform: scale(1.01);
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      background: #050505;
-      color: #666;
-      border-top: 1px solid rgba(250, 204, 21, 0.1);
-    }
-
-    /* Scroll reveal animations */
+    /* Reveal */
     .reveal {
       opacity: 0;
       transform: translateY(40px);
@@ -565,23 +407,16 @@
       transform: translateY(0);
     }
 
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #050505;
+      color: #666;
+      border-top: 1px solid rgba(250, 204, 21, 0.1);
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .navbar {
-        padding: 1rem 4%;
-      }
-
       nav ul {
         display: none;
         flex-direction: column;
@@ -607,25 +442,8 @@
         font-size: 2.4rem;
       }
 
-      .hero p {
-        font-size: 1.05rem;
-      }
-
-      section {
-        padding: 4rem 4%;
-      }
-
-      h2 {
-        font-size: 2rem;
-      }
-
       .project-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      .project-card:hover {
-        transform: translateY(-6px) scale(1.01);
       }
     }
 
@@ -634,13 +452,17 @@
         font-size: 2rem;
       }
 
-      .logo {
-        font-size: 1.3rem;
-      }
-
       .logo-wrapper {
         width: 34px;
         height: 34px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -649,7 +471,7 @@
   <header class="navbar">
     <div class="logo">
       <div class="logo-wrapper">
-        <img src="assets/logo.png" alt="LumiberStudio Logo" class="logo-img">
+        <img src="assets/logo.png" alt="LumiberStudio Logo" class="logo-img" onerror="this.style.display='none'">
       </div>
       Lumiber<span>Studio</span>
     </div>
@@ -665,8 +487,6 @@
   </header>
 
   <section id="home" class="hero">
-    <div class="orb3"></div>
-    <div class="orb4"></div>
     <div class="hero-content">
       <h1><span id="typedText"></span><span class="cursor">|</span></h1>
       <p>A personal creative space for showcasing my projects, designs, and creations.</p>
@@ -678,40 +498,33 @@
     <h2>My Projects</h2>
     <p class="section-desc">A collection of projects and creations from LumiberStudio.</p>
     <div class="project-grid">
-
-      <!-- Project 1 -->
       <div class="project-card reveal">
         <div class="project-img" style="background: linear-gradient(135deg, #eab308 0%, #facc15 100%);"></div>
         <div class="project-info">
-          <h3>Multimedia Club</h3>
-          <p>A school Club organization where events and announcment takes place</p>
-          <span class="tag">HTML, CSS, JS, AI</span>
-          <a href="https://multimedia.lumiberstudio.workers.dev/" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
-        </div>
-      </div>
-
-      <!-- Project 2 -->
-      <div class="project-card reveal">
-        <div class="project-img" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);"></div>
-        <div class="project-info">
-          <h3>Cawag Tambayan</h3>
-          <p>A Filipino restaurant/karinderya that is located near the subic zambales.</p>
-          <span class="tag">HTML, CSS, JS,</span>
-          <a href="https://lbs-ui.github.io/TC/" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
-        </div>
-      </div>
-
-      <!-- Project 3 -->
-      <div class="project-card reveal">
-        <div class="project-img" style="background: linear-gradient(135deg, #facc15 0%, #fef08a 100%);"></div>
-        <div class="project-info">
-          <h3>Zimelia Ai</h3>
-          <p>A Healthcare companion were she helps you talk about your problems. (underdevelopment)</p>
-          <span class="tag">HTML, CSS, JS, AI,</span>
+          <h3>Project One</h3>
+          <p>Project description goes here.</p>
+          <span class="tag">Design</span>
           <a href="#" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
         </div>
       </div>
-      <!-- Project 4 -->
+      <div class="project-card reveal">
+        <div class="project-img" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);"></div>
+        <div class="project-info">
+          <h3>Project Two</h3>
+          <p>Project description goes here.</p>
+          <span class="tag">Development</span>
+          <a href="#" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-img" style="background: linear-gradient(135deg, #facc15 0%, #fef08a 100%);"></div>
+        <div class="project-info">
+          <h3>Project Three</h3>
+          <p>Project description goes here.</p>
+          <span class="tag">Art</span>
+          <a href="#" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
+        </div>
+      </div>
       <div class="project-card reveal">
         <div class="project-img" style="background: linear-gradient(135deg, #ca8a04 0%, #eab308 100%);"></div>
         <div class="project-info">
@@ -721,7 +534,6 @@
           <a href="#" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
         </div>
       </div>
-      <!-- Project 5 -->
       <div class="project-card reveal">
         <div class="project-img" style="background: linear-gradient(135deg, #fde047 0%, #facc15 100%);"></div>
         <div class="project-info">
@@ -731,7 +543,6 @@
           <a href="#" class="visit-btn" target="_blank" rel="noopener">Visit Website</a>
         </div>
       </div>
-      <!-- Project 6 -->
       <div class="project-card reveal">
         <div class="project-img" style="background: linear-gradient(135deg, #a16207 0%, #eab308 100%);"></div>
         <div class="project-info">
@@ -746,7 +557,7 @@
 
   <section id="about" class="about reveal">
     <h2>About LumiberStudio</h2>
-    <div class="about-content reveal reveal-delay-1">
+    <div class="about-content reveal">
       <p>LumiberStudio is my personal creative studio where I collect and display the projects, designs, art, code, and other things I've made.</p>
       <p>Feel free to look around and see what I've been working on!</p>
     </div>
@@ -755,7 +566,7 @@
   <section id="contact" class="contact reveal">
     <h2>Get in Touch</h2>
     <p class="contact-text">Want to reach out about a project or just say hello?</p>
-    <div class="email-box reveal reveal-delay-1">
+    <div class="email-box reveal">
       <a href="mailto:lumberstudio@gmail.com" class="email-link">lumberstudio@gmail.com</a>
     </div>
   </section>
@@ -775,14 +586,13 @@
       });
     }
 
-    // Close menu when a link is clicked
     document.querySelectorAll('nav a').forEach(link => {
       link.addEventListener('click', () => {
         navUl.classList.remove('active');
       });
     });
 
-    // Typing effect for hero text
+    // Typing effect
     const typedText = document.getElementById('typedText');
     const fullText = "Welcome to LumiberStudio";
     const studioStart = fullText.indexOf("LumiberStudio");
@@ -799,30 +609,21 @@
         }
         charIndex++;
         setTimeout(typeWriter, 80);
-      } else {
-        // Keep cursor blinking after typing finishes
-        document.querySelector('.cursor').style.animation = 'blink 0.8s step-end infinite';
       }
     }
 
-    // Start typing after a short delay
     setTimeout(typeWriter, 600);
 
-    // Scroll reveal animation
+    // Scroll reveal
     const revealElements = document.querySelectorAll('.reveal');
-
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
-          // Optional: stop observing after it appears
           revealObserver.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.15,
-      rootMargin: '0px 0px -50px 0px'
-    });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
 
     revealElements.forEach(el => revealObserver.observe(el));
   </script>
